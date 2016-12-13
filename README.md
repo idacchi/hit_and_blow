@@ -1,2 +1,2 @@
-# golang
-GO Projects
+# ヒットアンドブロー
+GO言語の練習ですよ。
