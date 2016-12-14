@@ -36,12 +36,17 @@ func main() {
 	//
 	viewTitle()
 
-	var inputString string
-	var i int
+	//
+	//	正解作成
+	//
+	var ansData = craeteAnsData()
 
 	//
 	//	メインループ
 	//
+	var inputString string
+	var i int
+
 	for i = 0; ; {
 
 		var inputData []int
@@ -49,23 +54,29 @@ func main() {
 		fmt.Printf("【%d回目】%d桁の数字を入れてね > ", (i + 1), InputLen)
 
 		fmt.Scanln(&inputString)
-		//src = "1234"
-		fmt.Println("入力>" + inputString)
+		//inputString = "1234"
 
 		//	入力文字列検証
 		inputData, err := validateSourceText(inputString)
 
 		if nil != err {
-			fmt.Println(err.Error())
-			fmt.Println("")
+			fmt.Println("  error: " + err.Error() + "\n")
 			continue
-		} else {
-			fmt.Println("いけたね")
-			fmt.Println(inputData)
-			i++
 		}
 
-		break
+		//	正解と比較
+		var hit int
+		var blow int
+
+		hit, blow = checkHitAndBlow(inputData, ansData)
+
+		if InputLen <= hit {
+			fmt.Println("正解！")
+			break
+		} else {
+			fmt.Printf("HIT: %d, BLOW: %d\n\n", hit, blow)
+			i++
+		}
 	}
 }
 
@@ -77,8 +88,23 @@ func viewTitle() {
 	fmt.Println("")
 	fmt.Println("////////////////////////////////")
 	fmt.Println("  Hit and Blow!")
+	fmt.Println("  ※正解は4桁すべて違う数字です")
 	fmt.Println("////////////////////////////////")
 	fmt.Println("")
+}
+
+//******************************************************************************
+//	正解作成
+//******************************************************************************
+func craeteAnsData() (ansData []int) {
+
+	ansData = make([]int, InputLen)
+
+	for i := 0; i < InputLen; i++ {
+		ansData[i] = i
+	}
+
+	return
 }
 
 //******************************************************************************
@@ -121,7 +147,53 @@ func validateSourceText(iSrc string) (inputData []int, err error) {
 		}
 	}
 
-	//err = errors.New("ほげー")
+	return
+}
+
+//******************************************************************************
+//	ヒットとブローを算出
+//******************************************************************************
+func checkHitAndBlow(iInputData []int, iAnsData []int) (hit int, blow int) {
+
+	var noHitData = make([]int, 0, InputLen)
+	var workAnsData = make([]int, 0, InputLen)
+
+	//	HITチェック
+	var i int
+
+	for i = 0; i < InputLen; i++ {
+
+		if iInputData[i] == iAnsData[i] {
+			hit++
+		} else {
+			noHitData = append(noHitData, iInputData[i])
+			workAnsData = append(workAnsData, iAnsData[i])
+		}
+	}
+
+	//	すべてHITした場合はここで処理終了
+	if 0 >= len(noHitData) {
+		return
+	}
+
+	//	BLOWチェック
+	var iend = len(noHitData)
+	var jend = len(workAnsData)
+
+	for i = 0; i < iend; i++ {
+
+		for j := 0; j < jend; j++ {
+
+			if noHitData[i] == workAnsData[j] {
+				workAnsData[j] = -1
+				blow++
+			}
+		}
+	}
 
 	return
 }
+
+//******************************************************************************
+//	EOF
+//******************************************************************************
