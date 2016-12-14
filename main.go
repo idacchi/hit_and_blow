@@ -15,7 +15,9 @@ package main
 import (
 	"errors"
 	"fmt"
+	"math/rand"
 	"strconv"
+	"time"
 	"unicode/utf8"
 )
 
@@ -30,6 +32,11 @@ const (
 //	メイン
 //******************************************************************************
 func main() {
+
+	//
+	//	初期化
+	//
+	initialize()
 
 	//
 	//	タイトル表示
@@ -81,6 +88,15 @@ func main() {
 }
 
 //******************************************************************************
+//	初期化
+//******************************************************************************
+func initialize() {
+
+	//	乱数初期化
+	rand.Seed(time.Now().UnixNano())
+}
+
+//******************************************************************************
 //	タイトル表示
 //******************************************************************************
 func viewTitle() {
@@ -88,7 +104,8 @@ func viewTitle() {
 	fmt.Println("")
 	fmt.Println("////////////////////////////////")
 	fmt.Println("  Hit and Blow!")
-	fmt.Println("  ※正解は4桁すべて違う数字です")
+	fmt.Println("")
+	fmt.Printf("  ※正解は%d桁すべて違う数字です\n", InputLen)
 	fmt.Println("////////////////////////////////")
 	fmt.Println("")
 }
@@ -98,10 +115,35 @@ func viewTitle() {
 //******************************************************************************
 func craeteAnsData() (ansData []int) {
 
+	//	正解配列は要素の数が固定
 	ansData = make([]int, InputLen)
 
-	for i := 0; i < InputLen; i++ {
-		ansData[i] = i
+	//	同一の数字を使用しないために既出を保存しておく配列は可変で初期長さは0
+	work := make([]int, 0, InputLen)
+
+	for i := 0; i < InputLen; {
+
+		bOk := true
+
+		//	0 ～ 9 の乱数値
+		val := rand.Intn(10)
+
+		//	すでに使われているかチェック
+		jend := len(work)
+		for j := 0; j < jend; j++ {
+
+			if val == work[j] {
+				bOk = false
+				break
+			}
+		}
+
+		//	初出だったので使用する
+		if bOk {
+			ansData[i] = val
+			work = append(work, val)
+			i++
+		}
 	}
 
 	return
