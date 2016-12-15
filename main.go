@@ -16,9 +16,13 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
+	"os"
 	"strconv"
 	"time"
 	"unicode/utf8"
+
+	"github.com/shiena/ansicolor"
+	"github.com/wsxiaoys/terminal/color"
 )
 
 //******************************************************************************
@@ -100,6 +104,25 @@ func initialize() {
 //	タイトル表示
 //******************************************************************************
 func viewTitle() {
+
+	//	色を出すテスト
+	w := ansicolor.NewAnsiColorWriter(os.Stdout)
+	text := "%sforeground %sbold%s %sbackground%s\n"
+	fmt.Fprintf(w, text, "\x1b[31m", "\x1b[1m", "\x1b[22m", "\x1b[41;32m", "\x1b[0m")
+	fmt.Fprintf(w, text, "\x1b[32m", "\x1b[1m", "\x1b[22m", "\x1b[42;31m", "\x1b[0m")
+	fmt.Fprintf(w, text, "\x1b[33m", "\x1b[1m", "\x1b[22m", "\x1b[43;34m", "\x1b[0m")
+	fmt.Fprintf(w, text, "\x1b[34m", "\x1b[1m", "\x1b[22m", "\x1b[44;33m", "\x1b[0m")
+	fmt.Fprintf(w, text, "\x1b[35m", "\x1b[1m", "\x1b[22m", "\x1b[45;36m", "\x1b[0m")
+	fmt.Fprintf(w, text, "\x1b[36m", "\x1b[1m", "\x1b[22m", "\x1b[46;35m", "\x1b[0m")
+	fmt.Fprintf(w, text, "\x1b[37m", "\x1b[1m", "\x1b[22m", "\x1b[47;30m", "\x1b[0m")
+
+	color.Fprintf(w, "@{r}foreground @{r!}bold@{|} @{gR}background@{|}\n")
+	color.Fprintf(w, "@{g}foreground @{g!}bold@{|} @{rG}background@{|}\n")
+	color.Fprintf(w, "@{y}foreground @{y!}bold@{|} @{bY}background@{|}\n")
+	color.Fprintf(w, "@{b}foreground @{b!}bold@{|} @{yB}background@{|}\n")
+	color.Fprintf(w, "@{m}foreground @{m!}bold@{|} @{cM}background@{|}\n")
+	color.Fprintf(w, "@{c}foreground @{c!}bold@{|} @{mC}background@{|}\n")
+	color.Fprintf(w, "@{w}foreground @{w!}bold@{|} @{kW}background@{|}\n")
 
 	fmt.Println("")
 	fmt.Println("////////////////////////////////")
