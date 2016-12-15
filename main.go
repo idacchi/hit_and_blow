@@ -55,12 +55,12 @@ func main() {
 	//
 	//	メインループ
 	//
-	var inputString string
 	var i int
 
 	for i = 0; ; {
 
 		var inputData []int
+		var inputString string
 
 		fmt.Printf("【%d回目】%d桁の数字を入れてね > ", (i + 1), InputLen)
 
